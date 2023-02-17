@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Main {
     // fori = for loop
     // sout = System.out.println
@@ -18,19 +20,37 @@ public class Main {
 
         */
 
+        Scanner scanner = new Scanner(System.in);
+
         int worldWidth = 10;
         int worldHeight = 5;
 
-        int playerXCoordinate = getRandomCoordinate(worldWidth); // taisarvuline number
-        int playerYCoordinate = getRandomCoordinate(worldHeight);
-        char playerSymbol = 'X';
-        int dragonXCoordinate = getRandomCoordinate(worldWidth);
-        int dragonYCoordinate = getRandomCoordinate(worldHeight);
-        char dragonSymbol = 'D';
-        int orcXCoordinate = getRandomCoordinate(worldWidth);
-        int orcYCoordinate = getRandomCoordinate(worldHeight);
-        char orcSymbol = 'O';
+        Player player = new Player(worldWidth, worldHeight);
+        Dragon dragon = new Dragon(worldWidth, worldHeight);
+        Orc orc = new Orc(worldWidth, worldHeight);
 
+        printMap(worldWidth, worldHeight,
+                player.xCoordinate, player.yCoordinate, player.symbol,
+                dragon.xCoordinate, dragon.yCoordinate, dragon.symbol,
+                orc.xCoordinate, orc.yCoordinate, orc.symbol);
+
+        System.out.println();
+        String input = scanner.nextLine();
+
+        while (!input.equals("end")) {
+            player.move(input);
+
+            printMap(worldWidth, worldHeight,
+                    player.xCoordinate, player.yCoordinate, player.symbol,
+                    dragon.xCoordinate, dragon.yCoordinate, dragon.symbol,
+                    orc.xCoordinate, orc.yCoordinate, orc.symbol);
+
+            System.out.println();
+            input = scanner.nextLine();
+        }
+    }
+
+    private static void printMap(int worldWidth, int worldHeight, int playerXCoordinate, int playerYCoordinate, char playerSymbol, int dragonXCoordinate, int dragonYCoordinate, char dragonSymbol, int orcXCoordinate, int orcYCoordinate, char orcSymbol) {
         // algväärtus   kuni   iga tsükkel
         for (int y = 0; y < worldHeight; y++) {
             System.out.println();
