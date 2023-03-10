@@ -3,6 +3,7 @@ public class Player {
     int yCoordinate;
     char symbol;
     Direction direction;
+    Item item;
 
     public Player(int worldWidth, int worldHeight) {
         this.xCoordinate = getRandomCoordinate(worldWidth);

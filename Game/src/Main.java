@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -28,10 +31,16 @@ public class Main {
         Dragon dragon = new Dragon(world.width, world.height);
         Orc orc = new Orc(world.width, world.height);
 
+        Item sword = new Item(10, 1, "Mõõk", world.width, world.height);
+        Item hammer = new Item(5, 3, "Haamer", world.width, world.height);
+        Item boot = new Item(1, 10, "Saabas", world.width, world.height);
+
+        List<Item> items = new ArrayList<>(Arrays.asList(sword, hammer, boot));
+
         world.printMap(world.width, world.height,
                 player.xCoordinate, player.yCoordinate, player.symbol,
                 dragon.xCoordinate, dragon.yCoordinate, dragon.symbol,
-                orc.xCoordinate, orc.yCoordinate, orc.symbol);
+                orc.xCoordinate, orc.yCoordinate, orc.symbol, items);
 
         System.out.println();
         String input = scanner.nextLine();
@@ -42,9 +51,17 @@ public class Main {
             world.printMap(world.width, world.height,
                     player.xCoordinate, player.yCoordinate, player.symbol,
                     dragon.xCoordinate, dragon.yCoordinate, dragon.symbol,
-                    orc.xCoordinate, orc.yCoordinate, orc.symbol);
+                    orc.xCoordinate, orc.yCoordinate, orc.symbol, items);
 
             System.out.println();
+            for (Item i:
+                 items) {
+                if (player.xCoordinate == i.xCoordinate && player.yCoordinate == i.yCoordinate) {
+                    player.item = i;
+                    System.out.println("Korjasid eseme: " + player.item.name);
+                    break;
+                }
+            }
             input = scanner.nextLine();
         }
     }
