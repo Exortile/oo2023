@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -10,7 +12,7 @@ public class Main {
         Toidukomponent toidukomponent2 = new Toidukomponent(toiduaine2, 50);
         Toidukomponent toidukomponent3 = new Toidukomponent(toiduaine3, 400);
 
-        System.out.printf("Toiduaine nimega %s sisalduv rasvakogus: %d g%n", toiduaine3.nimetus, toidukomponent3.arvutaRasvakogus());
+        System.out.printf("Toiduaine nimega %s sisalduv rasvakogus: %d g%n", toiduaine3.nimetus, toidukomponent3.arvutaRasvaKogus());
         System.out.println();
 
         Toiduained toiduained = new Toiduained();
@@ -32,5 +34,13 @@ public class Main {
              otsitavad) {
             System.out.printf("Nimetus: %s%n", toiduaine.nimetus);
         }
+        System.out.println();
+
+        List<Toidukomponent> toidukomponendid = new ArrayList<>(Arrays.asList(toidukomponent1, toidukomponent2, toidukomponent3));
+        Toit toit = new Toit("kena toit", toidukomponendid);
+        toit.naitaToiduaineteKogused();
+
+        Toiduarvutaja toiduarvutaja = new Toiduarvutaja(toit);
+        toiduarvutaja.arvutaToiduained(5000);
     }
 }
