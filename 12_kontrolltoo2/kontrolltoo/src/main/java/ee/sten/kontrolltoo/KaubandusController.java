@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -36,7 +37,7 @@ public class KaubandusController {
             koikPoed.add(poodRepository.findById(poodId).get());
         }
 
-        kaubanduskeskusRepository.save(new Kaubanduskeskus(id, nimetus, koikPoed));
+        kaubanduskeskusRepository.save(new Kaubanduskeskus(id, nimetus, koikPoed, new HashMap<>()));
         return kaubanduskeskusRepository.findAll();
     }
 
@@ -76,5 +77,52 @@ public class KaubandusController {
         }
 
         return kulastatud;
+    }
+
+    // http://localhost:8080/kaubanduskeskus-kulasta-tund?id=1&tund=15
+    @GetMapping("kaubanduskeskus-kulasta-tund")
+    public String kulastaKaubanduskeskustTunnil(
+            @RequestParam int id,
+            @RequestParam int tund
+    ) {
+        Kaubanduskeskus kaubanduskeskus = kaubanduskeskusRepository.findById(id).get();
+        if (kaubanduskeskus.getKulastatudTunnid().containsKey(tund)) {
+            int kulastatud = kaubanduskeskus.getKulastatudTunnid().get(tund);
+            kaubanduskeskus.getKulastatudTunnid().replace(tund, kulastatud + 1);
+        } else {
+            kaubanduskeskus.getKulastatudTunnid().put(tund, 1);
+        }
+
+        kaubanduskeskusRepository.save(kaubanduskeskus);
+
+        return "Külastasite kaubanduskeskust!";
+    }
+
+    // http://localhost:8080/kaubanduskeskust-kulastanud?id=1&tund=17
+    @GetMapping("kaubanduskeskust-kulastanud")
+    public int getKaubanduskeskustKulastanudTunnil(
+            @RequestParam int id,
+            @RequestParam int tund
+    ) {
+        Kaubanduskeskus kaubanduskeskus = kaubanduskeskusRepository.findById(id).get();
+        return kaubanduskeskus.getKulastatudTunnid().getOrDefault(tund, 0);
+    }
+
+
+    // http://localhost:8080/kaubanduskeskus-koige-kulastatum/16
+    @GetMapping("kaubanduskeskus-koige-kulastatum/{tund}")
+    public Kaubanduskeskus getKulastatumKaubanduskeskus(@PathVariable int tund) {
+        var kaubanduskeskused = kaubanduskeskusRepository.findAll();
+        Kaubanduskeskus koigeKulastatum = kaubanduskeskused.get(0);
+
+        for (Kaubanduskeskus k:
+             kaubanduskeskused) {
+            int kulastatudArv = k.getKulastatudTunnid().getOrDefault(tund, 0);
+            if (kulastatudArv > koigeKulastatum.getKulastatudTunnid().getOrDefault(tund, 0)) {
+                koigeKulastatum = k;
+            }
+        }
+
+        return koigeKulastatum;
     }
 }
